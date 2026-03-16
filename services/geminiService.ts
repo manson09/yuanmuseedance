@@ -51,7 +51,7 @@ ${chapterContent}
     try {
       const apiKey = import.meta.env.VITE_GOOGLE_API_KEY;
       const baseUrl = import.meta.env.VITE_API_BASE_URL || 'https://openrouter.ai/api/v1';
-      const modelName = import.meta.env.VITE_MODEL_NAME || 'anthropic/claude-3.7-opus';
+      const modelName = import.meta.env.VITE_MODEL_NAME || 'anthropic/claude-opus-4.6';
 
       const response = await fetch(`${baseUrl}/chat/completions`, {
         method: "POST",
