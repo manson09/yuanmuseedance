@@ -75,7 +75,13 @@ const handleExportDocx = async () => {
 
   const parseOutputToDocxElements = (text: string) => {
     const elements: any[] = [];
-    const lines = text.split('\n');
+    
+    // 【核心隐身术】：找到正片“镜头组”第一次出现的位置
+    const firstShotIndex = text.indexOf('镜头组');
+    // 如果找到了，就截取从“镜头组”开始往后的所有内容，彻底抛弃前面的统筹表
+    const cleanText = firstShotIndex !== -1 ? text.substring(firstShotIndex) : text;
+
+    const lines = cleanText.split('\n');
     
     let currentParagraph: string[] = [];
 
@@ -91,24 +97,21 @@ const handleExportDocx = async () => {
           spacing: { before: 300, after: 100 },
         }));
       } else if (line.startsWith('镜头')) {
-        // 【核心修改】：智能切分标题和内容
-        // 寻找第一个冒号（兼容中文冒号和英文冒号）
+        // 智能切分标题和内容
         const splitIndex = line.indexOf('：') !== -1 ? line.indexOf('：') : line.indexOf(':');
 
         if (splitIndex !== -1) {
-          // 如果找到了冒号，把冒号前面（如：镜头1（00:00-05:00）：）截取出来
           const prefix = line.substring(0, splitIndex + 1);
           const content = line.substring(splitIndex + 1);
 
           elements.push(new Paragraph({
             children: [
-              new TextRun({ text: prefix, bold: true, color: "2563EB" }), // 只有镜头编号是蓝色的
-              new TextRun({ text: content }), // 后面的描述恢复黑色正常字体
+              new TextRun({ text: prefix, bold: true, color: "2563EB" }), 
+              new TextRun({ text: content }), 
             ],
             spacing: { before: 100, after: 50 },
           }));
         } else {
-          // 防错机制：万一AI没生成冒号，就默认全黑
           elements.push(new Paragraph({
             text: line,
             spacing: { before: 100, after: 50 },
