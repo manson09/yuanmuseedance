@@ -1,5 +1,3 @@
-
-import { GoogleGenAI } from "@google/genai";
 import { SYSTEM_PROMPT } from "../constants";
 
 export class GeminiService {
@@ -51,33 +49,73 @@ ${chapterContent}
 `;
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-      
-      const responseStream = await ai.models.generateContentStream({
-        model: 'gemini-3-pro-preview', // 使用能力更强的 Pro 模型进行复杂分镜设计
-        contents: [{ role: 'user', parts: [{ text: fullPrompt }] }],
-        config: {
-          systemInstruction: SYSTEM_PROMPT,
-          temperature: 0.8,
-          topP: 0.95,
-          // 适当增加输出限制，防止因输出过长被截断
-          maxOutputTokens: 8192,
+      // 1. 获取环境变量
+      const apiKey = import.meta.env.VITE_GOOGLE_API_KEY;
+      const baseUrl = import.meta.env.VITE_API_BASE_URL || 'https://openrouter.ai/api/v1';
+      const modelName = import.meta.env.VITE_MODEL_NAME || 'anthropic/claude-3.7-opus';
+
+      // 2. 发起网络请求 (OpenRouter 格式)
+      const response = await fetch(`${baseUrl}/chat/completions`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${apiKey}`,
+          "Content-Type": "application/json",
+          "HTTP-Referer": "https://yuanmuseedance.pages.dev",
+          "X-Title": "Yuanmu Seedance",
         },
+        body: JSON.stringify({
+          model: modelName,
+          messages: [
+            { role: "system", content: SYSTEM_PROMPT },
+            { role: "user", content: fullPrompt }
+          ],
+          temperature: 0.8,
+          stream: true, 
+        }),
       });
 
-      for await (const chunk of responseStream) {
-        if (chunk.text) {
-          onStream(chunk.text);
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`API 请求失败: ${errorText}`);
+      }
+
+      // 3. 处理流式输出
+      const reader = response.body?.getReader();
+      const decoder = new TextDecoder();
+
+      if (reader) {
+        while (true) {
+          const { done, value } = await reader.read();
+          if (done) break;
+          
+          const chunk = decoder.decode(value, { stream: true });
+          const lines = chunk.split('\n');
+          
+          for (const line of lines) {
+            if (line.startsWith('data: ')) {
+              const data = line.slice(6);
+              if (data === '[DONE]') break;
+              try {
+                const parsed = JSON.parse(data);
+                const content = parsed.choices[0].delta.content;
+                if (content) onStream(content);
+              } catch (e) {
+                // 忽略非JSON行
+              }
+            }
+          }
         }
       }
     } catch (error: any) {
-      console.error("Gemini Storyboard Generation Error:", error);
+      console.error("Storyboard Generation Error:", error);
       
       let errorMessage = "生成分镜脚本时被中断。";
-      if (error?.message?.includes("finishReason: SAFETY")) {
-        errorMessage = "检测到剧本内容可能触发了 AI 安全过滤机制，请尝试修改敏感词汇。";
-      } else if (error?.message?.includes("status code: 0") || error?.message?.includes("unexpected")) {
-        errorMessage = "网络连接异常或服务响应超时，请重试。";
+      if (error?.message?.includes("SAFETY")) {
+        errorMessage = "检测到敏感内容被过滤，请尝试修改词汇。";
+      } else if (error?.message?.includes("401")) {
+        errorMessage = "API Key 无效，请检查 Cloudflare 环境变量设置。";
+      } else if (error?.message?.includes("404")) {
+        errorMessage = "模型名称错误或 API 地址无效。";
       }
       
       throw new Error(errorMessage);
