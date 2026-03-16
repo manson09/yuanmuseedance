@@ -117,17 +117,36 @@ const StoryboardWorkbench: React.FC<StoryboardWorkbenchProps> = ({ project, sess
     return elements;
   };
 
-  const createNewSession = () => {
+ const createNewSession = () => {
+    // 1. 获取当前项目名称，如果没有获取到则兜底使用“未命名分镜稿”
+    const baseName = project.name || '未命名分镜稿';
+
+    // 2. 智能提取当前列表中最大的序号
+    const maxIndex = sessions.reduce((max, session) => {
+      // 检查标题是否以项目名称开头
+      if (session.chapterTitle.startsWith(baseName)) {
+        // 截取掉项目名称部分，去掉两端空格，看看剩下的是不是纯数字
+        const suffix = session.chapterTitle.slice(baseName.length).trim();
+        // 如果剩下的部分是纯数字（比如 "1", "2"），则比较并获取最大值
+        if (/^\d+$/.test(suffix)) {
+          return Math.max(max, parseInt(suffix, 10));
+        }
+      }
+      return max;
+    }, 0);
+
+    // 3. 拼接新名称：项目名称 + 空格 + (最大序号 + 1)
     const newId = crypto.randomUUID();
     const newSession: StoryboardSession = {
       id: newId,
       projectId: project.id,
-      chapterTitle: `未命名分镜稿 ${sessions.length + 1}`,
+      chapterTitle: `${baseName} ${maxIndex + 1}`,
       inputContent: '',
       outputRaw: '',
       status: 'idle',
       lastUpdated: Date.now()
     };
+    
     onUpdate([newSession, ...sessions]);
     setActiveSessionId(newId);
   };
