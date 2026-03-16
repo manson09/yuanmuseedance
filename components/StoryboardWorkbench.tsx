@@ -39,7 +39,7 @@ const StoryboardWorkbench: React.FC<StoryboardWorkbenchProps> = ({ project, sess
 
   const activeSession = sessions.find(s => s.id === activeSessionId);
 
-  const handleExportDocx = async () => {
+const handleExportDocx = async () => {
     if (!activeSession || !activeSession.outputRaw) return;
 
     const doc = new Document({
@@ -56,22 +56,13 @@ const StoryboardWorkbench: React.FC<StoryboardWorkbenchProps> = ({ project, sess
             children: [
               new TextRun({ text: `项目: ${project.name}`, bold: true }),
             ],
-            spacing: { after: 200 },
+            spacing: { after: 400 }, // 这里我稍微加大了间距，让排版更好看
           }),
-          new Paragraph({
-            children: [
-              new TextRun({ text: "原始剧本:", bold: true }),
-            ],
-            spacing: { after: 100 },
-          }),
-          new Paragraph({
-            text: activeSession.inputContent,
-            spacing: { after: 400 },
-          }),
+          // 【注意：这里已经删除了“原始剧本”和 inputContent 的相关代码】
           new Paragraph({
             text: "分镜脚本 (SeedDance 2.0 协议)",
             heading: HeadingLevel.HEADING_2,
-            spacing: { before: 400, after: 200 },
+            spacing: { before: 200, after: 200 },
           }),
           ...parseOutputToDocxElements(activeSession.outputRaw),
         ],
@@ -100,12 +91,29 @@ const StoryboardWorkbench: React.FC<StoryboardWorkbenchProps> = ({ project, sess
           spacing: { before: 300, after: 100 },
         }));
       } else if (line.startsWith('镜头')) {
-        elements.push(new Paragraph({
-          children: [
-            new TextRun({ text: line, bold: true, color: "2563EB" }),
-          ],
-          spacing: { before: 100, after: 50 },
-        }));
+        // 【核心修改】：智能切分标题和内容
+        // 寻找第一个冒号（兼容中文冒号和英文冒号）
+        const splitIndex = line.indexOf('：') !== -1 ? line.indexOf('：') : line.indexOf(':');
+
+        if (splitIndex !== -1) {
+          // 如果找到了冒号，把冒号前面（如：镜头1（00:00-05:00）：）截取出来
+          const prefix = line.substring(0, splitIndex + 1);
+          const content = line.substring(splitIndex + 1);
+
+          elements.push(new Paragraph({
+            children: [
+              new TextRun({ text: prefix, bold: true, color: "2563EB" }), // 只有镜头编号是蓝色的
+              new TextRun({ text: content }), // 后面的描述恢复黑色正常字体
+            ],
+            spacing: { before: 100, after: 50 },
+          }));
+        } else {
+          // 防错机制：万一AI没生成冒号，就默认全黑
+          elements.push(new Paragraph({
+            text: line,
+            spacing: { before: 100, after: 50 },
+          }));
+        }
       } else if (line.trim()) {
         elements.push(new Paragraph({
           text: line,
