@@ -49,12 +49,10 @@ ${chapterContent}
 `;
 
     try {
-      // 1. 获取环境变量
       const apiKey = import.meta.env.VITE_GOOGLE_API_KEY;
       const baseUrl = import.meta.env.VITE_API_BASE_URL || 'https://openrouter.ai/api/v1';
       const modelName = import.meta.env.VITE_MODEL_NAME || 'anthropic/claude-3.7-opus';
 
-      // 2. 发起网络请求 (OpenRouter 格式)
       const response = await fetch(`${baseUrl}/chat/completions`, {
         method: "POST",
         headers: {
@@ -79,7 +77,6 @@ ${chapterContent}
         throw new Error(`API 请求失败: ${errorText}`);
       }
 
-      // 3. 处理流式输出
       const reader = response.body?.getReader();
       const decoder = new TextDecoder();
 
@@ -87,10 +84,8 @@ ${chapterContent}
         while (true) {
           const { done, value } = await reader.read();
           if (done) break;
-          
           const chunk = decoder.decode(value, { stream: true });
           const lines = chunk.split('\n');
-          
           for (const line of lines) {
             if (line.startsWith('data: ')) {
               const data = line.slice(6);
@@ -99,26 +94,15 @@ ${chapterContent}
                 const parsed = JSON.parse(data);
                 const content = parsed.choices[0].delta.content;
                 if (content) onStream(content);
-              } catch (e) {
-                // 忽略非JSON行
-              }
+              } catch (e) {}
             }
           }
         }
       }
+      // 注意：这里已经没有 responseStream 循环了！
     } catch (error: any) {
       console.error("Storyboard Generation Error:", error);
-      
-      let errorMessage = "生成分镜脚本时被中断。";
-      if (error?.message?.includes("SAFETY")) {
-        errorMessage = "检测到敏感内容被过滤，请尝试修改词汇。";
-      } else if (error?.message?.includes("401")) {
-        errorMessage = "API Key 无效，请检查 Cloudflare 环境变量设置。";
-      } else if (error?.message?.includes("404")) {
-        errorMessage = "模型名称错误或 API 地址无效。";
-      }
-      
-      throw new Error(errorMessage);
+      throw new Error("生成分镜脚本时被中断。");
     }
   }
 }
