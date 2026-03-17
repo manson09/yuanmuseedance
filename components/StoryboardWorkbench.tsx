@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { Project, StoryboardSession } from '../types';
 import { geminiService } from '../services/geminiService';
@@ -31,6 +30,10 @@ const StoryboardWorkbench: React.FC<StoryboardWorkbenchProps> = ({ project, sess
   const [activeSessionId, setActiveSessionId] = useState<string | null>(
     sessions.length > 0 ? sessions[0].id : null
   );
+  
+  // 🌟 新增：导演风格下拉框的状态管理，默认使用项目设定的风格，如果没有则默认诺兰风格
+  const [styleType, setStyleType] = useState(project.styleType || 'nolan');
+  
   const [inputContent, setInputContent] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
   const [streamingText, setStreamingText] = useState(''); // Local state for smooth streaming
@@ -176,7 +179,7 @@ const handleExportDocx = async () => {
       
       await geminiService.generateStoryboard({
         projectName: project.name,
-        styleType: project.styleType,
+        styleType: styleType, // 🌟 修改：这里直接传入下拉框选中的 styleType
         kbContext,
         chapterContent: inputContent,
         onStream: (chunk) => {
@@ -323,6 +326,26 @@ const handleExportDocx = async () => {
                 <span>粘贴剧本章节</span>
                 <span className="text-blue-400">INPUT SOURCE</span>
               </div>
+              
+              {/* 🌟 新增：导演滤镜选择器 */}
+              <div className="p-4 pb-0 bg-slate-900/50 border-b border-white/5">
+                <div className="flex flex-col gap-2 mb-4">
+                  <label className="text-xs font-bold text-slate-400">🎬 电影级视觉滤镜 (大导风格)</label>
+                  <select 
+                    value={styleType} 
+                    onChange={(e) => setStyleType(e.target.value)}
+                    className="p-2.5 bg-slate-950 text-slate-200 border border-slate-700 rounded-lg shadow-sm focus:ring-1 focus:ring-blue-500 focus:border-blue-500 outline-none text-sm cursor-pointer transition-colors hover:border-slate-500"
+                  >
+                    <option value="nolan">克里斯托弗·诺兰 (冷峻史诗 / 青橙色调)</option>
+                    <option value="villeneuve">丹尼斯·维伦纽瓦 (废土巨物 / 沙丘压迫感)</option>
+                    <option value="wongkarwai">王家卫 (迷离复古 / 抽帧残影)</option>
+                    <option value="zhangyimou">张艺谋 (东方色彩 / 武侠写意)</option>
+                    <option value="wesanderson">韦斯·安德森 (童话对称 / 马卡龙色)</option>
+                    <option value="anime">2D 动漫 (赛璐璐 / 新海诚光影)</option>
+                  </select>
+                </div>
+              </div>
+
               <textarea 
                 value={inputContent}
                 onChange={e => setInputContent(e.target.value)}
