@@ -4,10 +4,12 @@ export const getLightingSetup = (scriptContent: string): string => {
 
   // 1. 设定默认的电影级兜底光影（规避平光与实体打光设备幻觉）
   let lightingRule = `
+// 1. 设定默认的电影级兜底光影（引入逻辑光源，彻底消灭穿帮假光）
+  let lightingRule = `
 【本场强制光影约束】：
-- 视觉结果：必须具备极强的电影感（Cinematic lighting），拒绝均匀的平光（Flat lighting）。
-- 轮廓塑造：强制使用强烈的侧逆光（Rim Light / Edge lighting）勾勒角色身体与面部轮廓，将主体与背景剥离。
-- 质感风格：高对比度（High Contrast），运用明暗交界线（Chiaroscuro）增加画面的戏剧张力与压迫感。`;
+- 逻辑光源优先 (Motivated Lighting)：**严禁无中生有制造毫无逻辑的强光！** 所有的主光和轮廓光必须基于场景中物理存在的发光体（如：窗户透入的路灯、忽明忽暗的电脑屏幕、头顶接触不良的白炽灯、门缝底漏出的微光）。
+- 视觉结果：必须基于上述真实的逻辑光源来营造电影感（Cinematic lighting），拒绝平铺直叙的均匀平光（Flat lighting）。
+- 轮廓塑造：巧妙利用场景背后的光源形成侧逆光（Rim Light）勾勒人物，同时运用明暗交界线（Chiaroscuro）增加画面的戏剧张力，但绝对不能违背室内外的物理常识。`;`;
 
   // 2. 优先匹配特殊天气或时间环境，覆盖默认光影
   if (scriptContent.includes('雨') || scriptContent.includes('雷') || scriptContent.includes('风暴')) {
