@@ -12,59 +12,62 @@ export class GeminiService {
     const { projectName, styleType, kbContext, chapterContent, onStream } = params;
 
 // 根据前端传入的 styleType，动态匹配大导演视觉滤镜
-    let styleDescription = '';
+ let styleDescription = '';
     
     switch (styleType) {
       case 'anime':
         styleDescription = `
 【2D 动漫风格专属执导指南】
-- 视觉质感：赛璐璐风格结合新海诚式唯美光影，极致的色彩美学，情绪化打光，画面充满艺术张力。
+- 视觉质感：赛璐璐风格结合新海诚式唯美光影，极致的色彩美学，情绪化打光。
 - 镜头语言：夸张透视（大透视/鱼眼），平移/推拉镜头（Pan/Zoom），速度线，冲击帧。
-- 动作与氛围：作画张力，突破物理限制的夸张动作，利用飘落的花瓣、雨滴等微观元素拉满氛围。`;
+- 动作与氛围：作画张力，利用光斑、微尘等微观光影元素拉满氛围。`;
         break;
         
       case 'villeneuve':
         styleDescription = `
-【好莱坞大导视觉滤镜：丹尼斯·维伦纽瓦 (Denis Villeneuve) 废土巨物风】
-- 视觉质感：Directed by Denis Villeneuve, cinematography by Roger Deakins. Brutalist architecture (粗野主义), monumental scale. 单色调配以强烈的点缀色 (如沙丘黄/废土橙)。大气雾霭 (Atmospheric haze)。
-- 镜头语言：极简而克制的巨物感构图，强调人物在宏大环境中的渺小感，缓慢而沉稳的推轨镜头。
-- 动作与氛围：极具压迫感的静谧，在死寂中孕育的爆发力，强调风沙、灰尘等环境颗粒感。`;
+【好莱坞大导视觉滤镜：丹尼斯·维伦纽瓦 (Denis Villeneuve) 光影风】
+- 视觉质感：Directed by Denis Villeneuve, cinematography by Roger Deakins. 单色调配以强烈的点缀色 (Monochromatic with harsh accents)。极简主义光影，克制的低饱和度，大气空间感 (Atmospheric depth)。
+- 镜头语言：沉稳的推轨镜头，强调人物与环境的比例反差（巨物感构图），拒绝花哨的运镜。
+- 动作与氛围：极具压迫感的静谧，利用光线的切割和空气中的微尘颗粒感（Dust motes in light）来渲染死寂中的爆发力。`;
         break;
 
       case 'wongkarwai':
         styleDescription = `
-【华语大导视觉滤镜：王家卫 (Wong Kar-wai) 迷离复古风】
-- 视觉质感：Directed by Wong Kar-wai, cinematography by Christopher Doyle. Cinematic step-printing effect (抽帧残影感). 高饱和度浓郁色彩 (祖母绿、深红、琥珀色)。Neon lights reflection。
-- 镜头语言：幽闭构图 (claustrophobic framing)，前景遮挡，手持晃动，极近距离的特写，人物往往偏离画面中心。
-- 动作与氛围：暧昧、迷离、忧郁的浪漫氛围，强烈的胶片颗粒感，突出人物内心拉扯。`;
+【华语大导视觉滤镜：王家卫 (Wong Kar-wai) 光影风】
+- 视觉质感：Directed by Wong Kar-wai, cinematography by Christopher Doyle. Cinematic step-printing effect (抽帧残影感). 高饱和度浓郁色彩 (如环境光晕染的祖母绿、深红、琥珀色)。霓虹灯反射质感 (Neon reflection)。
+- 镜头语言：幽闭构图 (claustrophobic framing)，前景遮挡，手持微晃，极近距离的特写，人物往往偏离画面中心。
+- 动作与氛围：暧昧、迷离的光影拉扯，强烈的胶片颗粒感，突出人物内心。`;
         break;
 
       case 'zhangyimou':
         styleDescription = `
-【华语大导视觉滤镜：张艺谋 (Zhang Yimou) 东方色彩美学风】
-- 视觉质感：Directed by Zhang Yimou. Vibrant and highly saturated colors (极致饱和的色彩，尤其是大红、金黄等浓烈纯色). Epic wuxia aesthetic. 极具东方古典韵味的画面质感。
-- 镜头语言：工整且具有仪式感的对称构图，大远景展现宏大意境，注重利用风、雨、丝绸、落叶等环境元素的动势（Flowing motion）来强化镜头张力。
-- 动作与氛围：兼具写意与力量感，光影对比极其浓烈，极具戏剧仪式感和历史厚重感。`;
+【华语大导视觉滤镜：张艺谋 (Zhang Yimou) 色彩光影风】
+- 视觉质感：Directed by Zhang Yimou. Vibrant and highly saturated colors (极致饱和的环境色彩，擅长用大红、金黄等浓烈纯色光影烘托情绪). 极具东方古典美学的超现实光影对比。
+- 镜头语言：工整且具有仪式感的绝对对称构图，大远景展现空间意境，注重利用光影的明暗交界线强化张力。
+- 动作与氛围：兼具形式美感与力量感，光影对比极其浓烈，画面犹如浓墨重彩的油画。`;
         break;
 
       case 'wesanderson':
         styleDescription = `
-【好莱坞大导视觉滤镜：韦斯·安德森 (Wes Anderson) 童话对称风】
+【好莱坞大导视觉滤镜：韦斯·安德森 (Wes Anderson) 光影风】
 - 视觉质感：Directed by Wes Anderson. Pastel color palette (马卡龙/柔和粉彩色调). Vintage 1970s aesthetic. 
-- 镜头语言：严格的绝对对称构图 (Strict symmetrical composition)，平面化打光 (Flat lighting)，像微缩模型般的置景感。
-- 动作与氛围：怪诞、治愈、戏剧化反差，人物动作带有机械感和冷幽默感。`;
+- 镜头语言：严格的绝对对称构图 (Strict symmetrical composition)，平面化打光 (Flat lighting)。
+- 动作与氛围：怪诞、治愈、戏剧化反差，画面干净整洁。`;
         break;
 
       case 'nolan':
       case 'live-action':
       default:
         styleDescription = `
-【好莱坞大导视觉滤镜：克里斯托弗·诺兰 (Christopher Nolan) 史诗冷峻风】
+【好莱坞大导视觉滤镜：克里斯托弗·诺兰 (Christopher Nolan) 光影风】
 - 视觉质感：Directed by Christopher Nolan, IMAX 70mm film aesthetic. Cinematic teal and orange color grading (青橙色调). 高对比度，冷峻写实的物理质感。
 - 镜头语言：克制且客观的冷酷视角，极具压迫感的史诗级构图，35mm定焦，手持轻微呼吸感。
-- 动作与氛围：强调真人动作的物理沉重感，利用烟雾、尘埃、火星等环境元素构建冷硬真实的史诗氛围。`;
+- 动作与氛围：强调光影的物理沉重感，利用冷硬的环境光构建史诗氛围。`;
         break;
     }
+
+    // 🌟 终极防越权补丁：死死锁住物理环境，禁止加戏！
+    styleDescription += `\n\n⚠️【导演滤镜绝对红线】：以上大导风格**仅限于改变画面的"调色、光影质感、运镜、构图与画质颗粒感"**！绝对禁止擅自改变剧本原有的物理场景、年代背景、天气，或添加无关实体道具。例如：如果剧本是现代超市，就绝不能因为维伦纽瓦风格而生成沙漠或沙暴，也不能因为张艺谋风格而出现古装或武侠元素！你必须在原剧本的物理设定下，纯粹依靠【打光和调色】来实现上述美学风格！`;
     
     const lightingGuidance = getLightingSetup(chapterContent);
     const fullPrompt = `
