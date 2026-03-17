@@ -4,22 +4,67 @@ import { getLightingSetup } from './skills/lightingExpert';
 export class GeminiService {
   async generateStoryboard(params: {
     projectName: string;
-    styleType: 'anime' | 'live-action';
+    styleType: string;
     kbContext: string;
     chapterContent: string;
     onStream: (chunk: string) => void;
   }) {
     const { projectName, styleType, kbContext, chapterContent, onStream } = params;
 
-    const styleDescription = styleType === 'anime' 
-      ? `【2D 动漫风格专属执导指南】
-- 视觉质感：赛璐璐风格 (Cel shading) 结合新海诚式唯美光影，极致的色彩美学，情绪化打光，画面充满艺术张力。
-- 镜头语言：夸张透视 (大透视/鱼眼)，平移/推拉镜头 (Pan/Zoom)，速度线 (Speed lines)，冲击帧 (Impact frames)。
-- 动作与氛围：作画张力 (Sakuga)，突破物理限制的夸张动作。必须利用飘落的花瓣、雨滴、光斑等微观元素拉满氛围感。` 
-      : `【好莱坞大导视觉滤镜：克里斯托弗·诺兰 (Christopher Nolan) 风格】
-- 视觉质感：IMAX 70mm胶片质感，极致的青橙色调 (Teal & Orange)。高对比度，冷峻写实的物理质感，强烈的胶片颗粒。
-- 镜头语言：克制且客观的冷酷视角，极具压迫感的史诗级构图 (Monumental scale) (如：35mm定焦，85mm特写，手持摄影/Steadicam跟拍，无人机俯拍，景深控制/浅景深)。
-- 动作与氛围：强调真人动作的物理重量感。必须利用烟雾、尘埃、火星、逆光剪影等环境元素构建史诗级或暗黑压抑的艺术氛围。`;
+// 根据前端传入的 styleType，动态匹配大导演视觉滤镜
+    let styleDescription = '';
+    
+    switch (styleType) {
+      case 'anime':
+        styleDescription = `
+【2D 动漫风格专属执导指南】
+- 视觉质感：赛璐璐风格结合新海诚式唯美光影，极致的色彩美学，情绪化打光，画面充满艺术张力。
+- 镜头语言：夸张透视（大透视/鱼眼），平移/推拉镜头（Pan/Zoom），速度线，冲击帧。
+- 动作与氛围：作画张力，突破物理限制的夸张动作，利用飘落的花瓣、雨滴等微观元素拉满氛围。`;
+        break;
+        
+      case 'villeneuve':
+        styleDescription = `
+【好莱坞大导视觉滤镜：丹尼斯·维伦纽瓦 (Denis Villeneuve) 废土巨物风】
+- 视觉质感：Directed by Denis Villeneuve, cinematography by Roger Deakins. Brutalist architecture (粗野主义), monumental scale. 单色调配以强烈的点缀色 (如沙丘黄/废土橙)。大气雾霭 (Atmospheric haze)。
+- 镜头语言：极简而克制的巨物感构图，强调人物在宏大环境中的渺小感，缓慢而沉稳的推轨镜头。
+- 动作与氛围：极具压迫感的静谧，在死寂中孕育的爆发力，强调风沙、灰尘等环境颗粒感。`;
+        break;
+
+      case 'wongkarwai':
+        styleDescription = `
+【华语大导视觉滤镜：王家卫 (Wong Kar-wai) 迷离复古风】
+- 视觉质感：Directed by Wong Kar-wai, cinematography by Christopher Doyle. Cinematic step-printing effect (抽帧残影感). 高饱和度浓郁色彩 (祖母绿、深红、琥珀色)。Neon lights reflection。
+- 镜头语言：幽闭构图 (claustrophobic framing)，前景遮挡，手持晃动，极近距离的特写，人物往往偏离画面中心。
+- 动作与氛围：暧昧、迷离、忧郁的浪漫氛围，强烈的胶片颗粒感，突出人物内心拉扯。`;
+        break;
+
+      case 'zhangyimou':
+        styleDescription = `
+【华语大导视觉滤镜：张艺谋 (Zhang Yimou) 东方色彩美学风】
+- 视觉质感：Directed by Zhang Yimou. Vibrant and highly saturated colors (极致饱和的色彩，尤其是大红、金黄等浓烈纯色). Epic wuxia aesthetic. 极具东方古典韵味的画面质感。
+- 镜头语言：工整且具有仪式感的对称构图，大远景展现宏大意境，注重利用风、雨、丝绸、落叶等环境元素的动势（Flowing motion）来强化镜头张力。
+- 动作与氛围：兼具写意与力量感，光影对比极其浓烈，极具戏剧仪式感和历史厚重感。`;
+        break;
+
+      case 'wesanderson':
+        styleDescription = `
+【好莱坞大导视觉滤镜：韦斯·安德森 (Wes Anderson) 童话对称风】
+- 视觉质感：Directed by Wes Anderson. Pastel color palette (马卡龙/柔和粉彩色调). Vintage 1970s aesthetic. 
+- 镜头语言：严格的绝对对称构图 (Strict symmetrical composition)，平面化打光 (Flat lighting)，像微缩模型般的置景感。
+- 动作与氛围：怪诞、治愈、戏剧化反差，人物动作带有机械感和冷幽默感。`;
+        break;
+
+      case 'nolan':
+      case 'live-action':
+      default:
+        styleDescription = `
+【好莱坞大导视觉滤镜：克里斯托弗·诺兰 (Christopher Nolan) 史诗冷峻风】
+- 视觉质感：Directed by Christopher Nolan, IMAX 70mm film aesthetic. Cinematic teal and orange color grading (青橙色调). 高对比度，冷峻写实的物理质感。
+- 镜头语言：克制且客观的冷酷视角，极具压迫感的史诗级构图，35mm定焦，手持轻微呼吸感。
+- 动作与氛围：强调真人动作的物理沉重感，利用烟雾、尘埃、火星等环境元素构建冷硬真实的史诗氛围。`;
+        break;
+    }
     
     const lightingGuidance = getLightingSetup(chapterContent);
     const fullPrompt = `
