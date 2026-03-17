@@ -1,4 +1,5 @@
 import { SYSTEM_PROMPT } from "../constants";
+import { getLightingSetup } from './skills/lightingExpert';
 
 export class GeminiService {
   async generateStoryboard(params: {
@@ -19,10 +20,12 @@ export class GeminiService {
 - 视觉质感：大师级摄影构图，A24制片厂级别的浓郁电影氛围感。真实物理光影 (如：伦勃朗光，丁达尔效应，极具张力的明暗交界线)，胶片颗粒感。
 - 镜头语言：使用具体的电影镜头语言 (如：35mm定焦，85mm特写，手持摄影/Steadicam跟拍，无人机俯拍，景深控制/浅景深)。
 - 动作与氛围：强调真人动作的物理重量感。必须利用烟雾、尘埃、火星、逆光剪影等环境元素构建史诗级或暗黑压抑的艺术氛围。`;
-
+    
+    const lightingGuidance = getLightingSetup(chapterContent);
     const fullPrompt = `
 项目名称: ${projectName}
 视觉风格设定: ${styleDescription}
+${lightingGuidance}
 
 【核心执导原则】:
 1. 剧本忠实度：**严禁跳过剧情**。必须严格遵循剧本的事件顺序、台词和动作。分镜是剧本的视觉还原。
