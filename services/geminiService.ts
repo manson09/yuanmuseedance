@@ -28,7 +28,7 @@ export class GeminiService {
 【好莱坞大导视觉滤镜：丹尼斯·维伦纽瓦 (Denis Villeneuve) 光影风】
 - 视觉质感：Directed by Denis Villeneuve, cinematography by Roger Deakins. 单色调配以强烈的点缀色 (Monochromatic with harsh accents)。极简主义光影，克制的低饱和度，大气空间感 (Atmospheric depth)。
 - 镜头语言：沉稳的推轨镜头，强调人物与环境的比例反差（巨物感构图），拒绝花哨的运镜。
-- 动作与氛围：极具压迫感的静谧，利用光线的切割和空气中的微尘颗粒感（Dust motes in light）来渲染死寂中的爆发力。`;
+- 氛围：利用光线的切割和空气中的微尘颗粒感（Dust motes in light）。`;
         break;
 
       case 'wongkarwai':
@@ -36,7 +36,7 @@ export class GeminiService {
 【华语大导视觉滤镜：王家卫 (Wong Kar-wai) 光影风】
 - 视觉质感：Directed by Wong Kar-wai, cinematography by Christopher Doyle. Cinematic step-printing effect (抽帧残影感). 高饱和度浓郁色彩 (如环境光晕染的祖母绿、深红、琥珀色)。霓虹灯反射质感 (Neon reflection)。
 - 镜头语言：幽闭构图 (claustrophobic framing)，前景遮挡，手持微晃，极近距离的特写，人物往往偏离画面中心。
-- 动作与氛围：暧昧、迷离的光影拉扯，强烈的胶片颗粒感，突出人物内心。`;
+- 氛围：暧昧、迷离的光影拉扯，强烈的胶片颗粒感。`;
         break;
 
       case 'zhangyimou':
@@ -44,7 +44,7 @@ export class GeminiService {
 【华语大导视觉滤镜：张艺谋 (Zhang Yimou) 色彩光影风】
 - 视觉质感：Directed by Zhang Yimou. Vibrant and highly saturated colors (极致饱和的环境色彩，擅长用大红、金黄等浓烈纯色光影烘托情绪). 极具东方古典美学的超现实光影对比。
 - 镜头语言：工整且具有仪式感的绝对对称构图，大远景展现空间意境，注重利用光影的明暗交界线强化张力。
-- 动作与氛围：兼具形式美感与力量感，光影对比极其浓烈，画面犹如浓墨重彩的油画。`;
+- 氛围：兼具形式美感与力量感，光影对比极其浓烈。`;
         break;
 
       case 'wesanderson':
@@ -52,7 +52,7 @@ export class GeminiService {
 【好莱坞大导视觉滤镜：韦斯·安德森 (Wes Anderson) 光影风】
 - 视觉质感：Directed by Wes Anderson. Pastel color palette (马卡龙/柔和粉彩色调). Vintage 1970s aesthetic. 
 - 镜头语言：严格的绝对对称构图 (Strict symmetrical composition)，平面化打光 (Flat lighting)。
-- 动作与氛围：怪诞、治愈、戏剧化反差，画面干净整洁。`;
+- 氛围：治愈、戏剧化反差，画面干净整洁。`;
         break;
 
       case 'nolan':
@@ -62,7 +62,7 @@ export class GeminiService {
 【好莱坞大导视觉滤镜：克里斯托弗·诺兰 (Christopher Nolan) 光影风】
 - 视觉质感：Directed by Christopher Nolan, IMAX 70mm film aesthetic. Cinematic teal and orange color grading (青橙色调). 高对比度，冷峻写实的物理质感。
 - 镜头语言：克制且客观的冷酷视角，极具压迫感的史诗级构图，35mm定焦，手持轻微呼吸感。
-- 动作与氛围：强调光影的物理沉重感，利用冷硬的环境光构建史诗氛围。`;
+- 氛围：强调光影的物理沉重感，利用冷硬的环境光构建史诗氛围。`;
         break;
     }
 
