@@ -138,7 +138,7 @@ C. 镜头间一致性 (Intra-group Consistency)
 
 镜头组 [组号]
 【场次信息】：时间：[日/夜/傍晚/清晨等] 
-【风格】：[融合大导滤镜与基础美学，如：好莱坞真人电影，A24级别暗调现实主义，35mm胶片质感，冷色调荧光灯环境]
+【风格】：[融合大导滤镜与基础美学，如：好莱坞真人电影，A24级别暗调现实主义，35mm胶片质感，冷色调荧光灯环境，当选择了真人电影风格，必须注明真人电影]
 【光影】：[必须是具体的物理光源描述！如：超市顶部工业荧光灯投射惨白顶光，收银台区域形成明暗交界线，人物面部呈现伦勃朗光效。严禁只写抽象词汇。]
 【画质】：[如：8K电影级，胶片颗粒感，浅景深，真实物理光影，肌肤毛孔可见的超高清纹理]
 【负面约束提示词】：bad anatomy, extra limbs, distorted physics, blurred textures, morphing, merging objects, flickering, hands merging with objects, floating items, deformed fingers, [根据本组特定动作补充负面词，如：unrealistic pregnancy belly]
