@@ -35,3 +35,4 @@ ${lightingGuidance}
 【待处理剧本】:
 ${chapterContent}
 `;
+export const geminiService = new GeminiService();
