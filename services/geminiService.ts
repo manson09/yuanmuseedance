@@ -163,5 +163,5 @@ ${chapterContent}
     }
   }
 }
-
+export const geminiService = new GeminiService();
 // 🌟 修复3
